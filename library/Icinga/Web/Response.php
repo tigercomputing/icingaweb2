@@ -302,7 +302,8 @@ class Response extends Zend_Controller_Response_Http
                 $this->setHeader('X-Icinga-Reload-Css', 'now', true);
             }
             if (($autoRefreshInterval = $this->getAutoRefreshInterval()) !== null) {
-                $this->setHeader('X-Icinga-Refresh', $autoRefreshInterval, true);
+                // Using sprintf('%F',$autoRefreshInterval) to set e.g. '1.25' and not '1,25'
+                $this->setHeader('X-Icinga-Refresh', sprintf('%F', $autoRefreshInterval), true);
             }
 
             $notifications = Notification::getInstance();

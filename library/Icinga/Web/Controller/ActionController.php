@@ -519,7 +519,19 @@ class ActionController extends Zend_Controller_Action
         }
 
         if ($this->autorefreshInterval !== null) {
-            $resp->setAutoRefreshInterval($this->autorefreshInterval);
+            $user = $this->getRequest()->getUser();
+
+            if ($user === null) {
+                $speed = 1;
+            } else {
+                $speed = (float) $user->getPreferences()->getValue('icingaweb', 'auto_refresh_speed', 1.0);
+
+                if ($speed <= 0) {
+                    $speed = 1;
+                }
+            }
+
+            $resp->setAutoRefreshInterval($this->autorefreshInterval * $speed);
         }
     }
 
