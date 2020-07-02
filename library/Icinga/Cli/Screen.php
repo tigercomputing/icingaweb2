@@ -94,7 +94,7 @@ class Screen
     public static function instance()
     {
         if (self::$instance === null) {
-            if (function_exists('posix_isatty') && posix_isatty(STDOUT)) {
+            if (function_exists('posix_isatty') && posix_isatty(STDERR)) {
                 self::$instance = new AnsiScreen();
             } else {
                 self::$instance = new Screen();
