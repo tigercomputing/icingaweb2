@@ -172,6 +172,17 @@ class LessCompiler
             $this->source .= file_get_contents($lessFile);
         }
 
+        // TODO: ......no, dependency management, pls
+        uksort($this->moduleLessFiles, function ($a, $b) {
+            if ($a === 'ipl') {
+                return -1;
+            } elseif ($b === 'ipl') {
+                return 1;
+            }
+
+            return strcmp($a, $b);
+        });
+
         $moduleCss = '';
         foreach ($this->moduleLessFiles as $moduleName => $moduleLessFiles) {
             $moduleCss .= '.icinga-module.module-' . $moduleName . ' {';
@@ -183,10 +194,17 @@ class LessCompiler
                 }
             }
 
+            if ($moduleName === 'ipl') {
+                $moduleCss .= '}';
+            }
+
             foreach ($moduleLessFiles as $moduleLessFile) {
                 $moduleCss .= file_get_contents($moduleLessFile);
             }
-            $moduleCss .= '}';
+
+            if ($moduleName !== 'ipl') {
+                $moduleCss .= '}';
+            }
         }
 
         $this->source .= $moduleCss;
