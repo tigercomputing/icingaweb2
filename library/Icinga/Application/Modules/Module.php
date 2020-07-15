@@ -1444,6 +1444,21 @@ class Module
                 )
             )
         );
+        $router->addRoute(
+            $this->name . '_asset',
+            new Zend_Controller_Router_Route_Regex(
+                'asset/' . $this->name . '/(.+)',
+                [
+                    'action'        => 'index',
+                    'controller'    => 'static',
+                    'module'        => 'default',
+                    'module_name'   => $this->name
+                ],
+                [
+                    1 => 'file'
+                ]
+            )
+        );
         return $this;
     }
 
