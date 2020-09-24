@@ -28,7 +28,12 @@ class BackendAvailabilityNavigationItemRenderer extends BadgeNavigationItemRende
             ->select()
             ->from(
                 'programstatus',
-                array('is_currently_running', 'notifications_enabled')
+                array(
+                  'active_host_checks_enabled',
+                  'active_service_checks_enabled',
+                  'is_currently_running',
+                  'notifications_enabled'
+                )
             )
             ->fetchRow();
 
@@ -59,6 +64,16 @@ class BackendAvailabilityNavigationItemRenderer extends BadgeNavigationItemRende
             }
             $count = 0;
             $titles = array();
+            if (! (bool) $programStatus->active_host_checks_enabled) {
+                $count = 1;
+                $this->state = static::STATE_WARNING;
+                $titles[] = mt('monitoring', 'Active host checks are disabled');
+            }
+            if (! (bool) $programStatus->active_service_checks_enabled) {
+                $count = 1;
+                $this->state = static::STATE_WARNING;
+                $titles[] = mt('monitoring', 'Active service checks are disabled');
+            }
             if (! (bool) $programStatus->notifications_enabled) {
                 $count = 1;
                 $this->state = static::STATE_WARNING;
